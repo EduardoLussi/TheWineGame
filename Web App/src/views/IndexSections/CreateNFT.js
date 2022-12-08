@@ -20,25 +20,90 @@ import React from "react";
 // reactstrap components
 import { Pagination, Button, Container, FormGroup, Input, PaginationItem, PaginationLink, Col } from "reactstrap";
 
+import api from '../../api';
+
 class CreateNFT extends React.Component {
   state = {
-    pagination: 1
+    pagination: 1,
+    wineImage: null,
+    wineBarcode: null
+  }
+
+  async getWine(barcode) {
+    if (!barcode) return;
+
+    const resWine = await api.get("wine", {
+      headers: { barcode }
+    });
+    
+    this.setState({ wine: resWine.data });
+
+    const resImage = await api.get("wineImage", {
+      headers: { barcode },
+      responseType: 'arraybuffer'
+    });
+    const base64 = btoa(new Uint8Array(resImage.data).reduce(
+      (data, byte) => data + String.fromCharCode(byte),
+      ''
+    ));
+    this.setState({ wineImage: "data:;base64," + base64 });
   }
 
   paginationPage(pagination) {
     if (pagination === 1) {
       return (
         <Container>
+          <FormGroup style={{ }}>
+            <Input placeholder="Barcode" type="text" 
+                   onChange={ e => this.setState({ wineBarcode: e.target.value }) } />
+          </FormGroup>
           <Button
             block
             color="primary"
-            style={{ background: "#46767e", border: "None" }}
+            style={{ background: "#63032e", border: "None" }}
             size="lg"
             type="button"
             className="ml-1"
+            onClick={() => this.getWine(this.state.wineBarcode)}
           >
-            Read Barcode
+            GET WINE
           </Button>
+          
+          { this.state.wineImage ? (
+              <div>
+                <div style={{ margin: '5vh auto 0 auto', 
+                              display: 'inline-flex', 
+                              justifyContent: 'space-between', 
+                              width: '80vw' }}>
+                  <img 
+                    src={this.state.wineImage} 
+                    style={{ width: '20%', margin: '0 auto' }}
+                    alt="..."/>
+                  <div>
+                    <p>Producer: {this.state.wine.producer}</p>
+                    { this.state.wine.brand ? (<p>Brand: {this.state.wine.brand}</p>) : null }
+                    <p>Appelation: {this.state.wine.appellation}</p>
+                    <p>Country: {this.state.wine.country}</p>
+                    <p>Region: {this.state.wine.region}</p>
+                    <p>Vintage: {this.state.wine.vintage}</p>
+                  </div>
+                </div>
+                <div style={{ textAlign: 'center', margin: '2vh 0' }}>
+                  <p className="lead">Is this your wine?</p>
+                </div>
+                <Button
+                  block
+                  color="primary"
+                  style={{ background: "#46767e", border: "None" }}
+                  size="lg"
+                  type="button"
+                  className="ml-1"
+                  onClick={ () => this.setState({ pagination: 2 }) }
+                >
+                  YEP!
+                </Button>
+              </div>
+            ) : null }
         </Container>
       )
     } else if (pagination === 2) {
