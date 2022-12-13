@@ -27,7 +27,7 @@ class About extends React.Component {
         <h2 className="mt-lg mb-5">
           <span>About</span>
         </h2>
-        <p className="lead" style={{ 'text-align': 'justify' }}>
+        <p className="lead" style={{ textAlign: 'justify' }}>
           The Wine Game is changing the way people know wine. We are building an entire
           ecosystem of wine consumption, creating NFTs for storing people's unique
           wine moments.
@@ -35,7 +35,7 @@ class About extends React.Component {
         <h3 className="h4 font-weight-bold mt-md" style={{ color: '#63032e' }}>What is an NFT?</h3>
         <Row className="py-3 align-items-center">
           <Col sm="9">
-            <p className="lead" style={{ 'text-align': 'justify' }}>
+            <p className="lead" style={{ textAlign: 'justify' }}>
               NFT stands for Non-Fungible Token, which is an unique digital information
               stored on a blockchain. A fungible item is something that can be exchanged for
               another item that has the same value and meaning, like money. On the other hand, a
@@ -47,7 +47,7 @@ class About extends React.Component {
         <h3 className="h4 font-weight-bold mt-md" style={{ color: '#63032e' }}>Collect Wine Moments!</h3>
         <Row className="py-3 align-items-center">
           <Col sm="9">
-            <p className="lead" style={{ 'text-align': 'justify' }}>
+            <p className="lead" style={{ textAlign: 'justify' }}>
               The real value of a wine is the moment you drink it. It is a tradition to collect 
               wine corks as a reminder of wine moments. The Wine Game allows you to create
               virtual wine corks to be stored forever on Ethereum blockchain as an NFT! Don't
