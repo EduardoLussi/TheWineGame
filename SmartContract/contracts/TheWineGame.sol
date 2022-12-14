@@ -8,9 +8,9 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 contract TheWineGame is Ownable, ERC721 {
     
     struct WineCork {
-        uint256 year;
-        uint256 month;
-        uint256 day;
+        uint16 year;
+        uint8 month;
+        uint8 day;
         string[5] guests;
         string title;
         uint256 beverage_barcode_data;
@@ -18,11 +18,9 @@ contract TheWineGame is Ownable, ERC721 {
         string baverage_name;
     }
     
-    mapping (uint256 => WineCork) tokenIDs;
+    mapping (uint256 => WineCork) allCorks;
 
     string private _currentBaseURI;
-
-    uint256 private tokenIDCounter = 0;
 
     constructor() ERC721("TheWineGame", "TWG") {
         setBaseURI("localhost:3333");
@@ -36,13 +34,32 @@ contract TheWineGame is Ownable, ERC721 {
         return _currentBaseURI;
     }
 
-    function mint(string[5] memory guests, string memory title, uint256 beverage_barcode_data, string memory beverage_brand, string memory baverage_name) public {
-        uint256 newTokenID = tokenIDCounter;
-        tokenIDCounter += 1;
-        (uint256 year, uint256 month, uint256 day) = timestampToDate(block.timestamp);
+    function getCork(uint256 tokenID) external view returns (uint16 year, uint8 month, uint8 day, string[5] memory guests, string memory title, string memory brand, string memory name) {
+        require(_exists(tokenID), "NFT not minted.");
+        WineCork memory cork = allCorks[tokenID];
+        year = cork.year;
+        month = cork.month;
+        day = cork.day;
+        guests = cork.guests;
+        title = cork.title;
+        brand = cork.beverage_brand;
+        name = cork.baverage_name;
+    }
 
-        tokenIDs[newTokenID] = WineCork(year, month, day, guests, title, beverage_barcode_data, beverage_brand, baverage_name);
-        _safeMint(msg.sender, newTokenID);
+    function claim(string[5] memory guests, string memory title, uint256 beverage_barcode_data, string memory beverage_brand, 
+                    string memory baverage_name) external payable {
+        require(!_exists(beverage_barcode_data), "NFT already minted.");
+        // require(msg.value == 0.0002 ether, "Claiming a cork costs 0.2 finney.");
+
+        mint(guests, title, beverage_barcode_data, beverage_brand, baverage_name);
+        // payable(owner()).transfer(0.0002 ether);
+    }
+
+    function mint(string[5] memory guests, string memory title, uint256 beverage_barcode_data, string memory beverage_brand, string memory baverage_name) internal {
+        (uint16 year, uint8 month, uint8 day) = timestampToDate(block.timestamp);
+
+        allCorks[beverage_barcode_data] = WineCork(year, month, day, guests, title, beverage_barcode_data, beverage_brand, baverage_name);
+        _safeMint(msg.sender, beverage_barcode_data);
     }
 
     function timestampToDate(uint timestamp) public pure returns (uint16 year, uint8 month, uint8 day) {
