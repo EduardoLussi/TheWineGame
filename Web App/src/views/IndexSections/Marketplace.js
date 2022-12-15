@@ -28,7 +28,7 @@ class Marketplace extends React.Component {
           <h2 className="mt-lg">
             <span>Marketplace</span>
           </h2>
-          <a href="https://opensea.io/collection/brazuera-o-conselho">
+          <a href="https://testnets.opensea.io/collection/thewinegame">
             <img 
               alt="..." 
               src={require("assets/img/opensea-logo.png")} 
