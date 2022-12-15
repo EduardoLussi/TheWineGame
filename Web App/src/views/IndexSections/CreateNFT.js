@@ -15,10 +15,11 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
+import { initWeb3, connectToBlockchain, claimCork } from "blockchain";
 import React from "react";
 
 // reactstrap components
-import { Pagination, Button, Container, FormGroup, Input, PaginationItem, PaginationLink, Col } from "reactstrap";
+import { Pagination, Button, Container, FormGroup, Input, PaginationItem, PaginationLink } from "reactstrap";
 
 import api from '../../api';
 
@@ -30,6 +31,15 @@ class CreateNFT extends React.Component {
     wineBarcode: null,
     accounts: [],
     title: ''
+  }
+
+  componentDidMount = async() => {
+    const res = await initWeb3();
+    if (!res) {
+      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
+      return;
+    }
+    await connectToBlockchain();
   }
 
   async getWine(barcode) {
@@ -69,8 +79,14 @@ class CreateNFT extends React.Component {
     });
   }
 
-  async createNFT() {
-
+  createNFT() {
+    claimCork(
+      this.state.accounts, 
+      this.state.title, 
+      this.state.wine.barcode,
+      this.state.wine.producer, 
+      this.state.wine.appellation + " " + this.state.wine.vintage
+    );
   }
 
   paginationPage(pagination) {

@@ -11,7 +11,7 @@ contract TheWineGame is Ownable, ERC721 {
         uint16 year;
         uint8 month;
         uint8 day;
-        string[5] guests;
+        address[] guests;
         string title;
         uint256 beverage_barcode_data;
         string beverage_brand;
@@ -21,6 +21,8 @@ contract TheWineGame is Ownable, ERC721 {
     mapping (uint256 => WineCork) allCorks;
 
     string private _currentBaseURI;
+
+    uint256 private tokenIDCounter = 0;
 
     constructor() ERC721("TheWineGame", "TWG") {
         setBaseURI("localhost:3333");
@@ -34,7 +36,7 @@ contract TheWineGame is Ownable, ERC721 {
         return _currentBaseURI;
     }
 
-    function getCork(uint256 tokenID) external view returns (uint16 year, uint8 month, uint8 day, string[5] memory guests, string memory title, string memory brand, string memory name) {
+    function getCork(uint256 tokenID) external view returns (uint16 year, uint8 month, uint8 day, address[] memory guests, string memory title, string memory brand, string memory name) {
         require(_exists(tokenID), "NFT not minted.");
         WineCork memory cork = allCorks[tokenID];
         year = cork.year;
@@ -46,20 +48,21 @@ contract TheWineGame is Ownable, ERC721 {
         name = cork.baverage_name;
     }
 
-    function claim(string[5] memory guests, string memory title, uint256 beverage_barcode_data, string memory beverage_brand, 
+    function claim(address[] memory guests, string memory title, uint256 beverage_barcode_data, string memory beverage_brand, 
                     string memory baverage_name) external payable {
-        require(!_exists(beverage_barcode_data), "NFT already minted.");
-        // require(msg.value == 0.0002 ether, "Claiming a cork costs 0.2 finney.");
+        require(msg.value == 0.01 ether, "Claiming a cork costs 10 finney.");
 
         mint(guests, title, beverage_barcode_data, beverage_brand, baverage_name);
-        // payable(owner()).transfer(0.0002 ether);
+        payable(owner()).transfer(0.01 ether);
     }
 
-    function mint(string[5] memory guests, string memory title, uint256 beverage_barcode_data, string memory beverage_brand, string memory baverage_name) internal {
+    function mint(address[] memory guests, string memory title, uint256 beverage_barcode_data, string memory beverage_brand, string memory baverage_name) internal {
+        uint256 newTokenID = tokenIDCounter;
+        tokenIDCounter += 1;
         (uint16 year, uint8 month, uint8 day) = timestampToDate(block.timestamp);
 
-        allCorks[beverage_barcode_data] = WineCork(year, month, day, guests, title, beverage_barcode_data, beverage_brand, baverage_name);
-        _safeMint(msg.sender, beverage_barcode_data);
+        allCorks[newTokenID] = WineCork(year, month, day, guests, title, beverage_barcode_data, beverage_brand, baverage_name);
+        _safeMint(msg.sender, newTokenID);
     }
 
     function timestampToDate(uint timestamp) public pure returns (uint16 year, uint8 month, uint8 day) {

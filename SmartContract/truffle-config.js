@@ -102,8 +102,8 @@ module.exports = {
       development: {
         host: "127.0.0.1",  // Ganache's default
         port: 7545,         // Ganache's default
-        network_id: "*"
-        // from: "0xDEADBEEF" // It changes the account address to deploy the smart contract
+        network_id: "*",
+        from: "0xe409d6bBfc0AFa75e29F626C723f5e2773335E04" // It changes the account address to deploy the smart contract
       }
     },
 
