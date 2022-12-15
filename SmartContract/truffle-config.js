@@ -41,10 +41,11 @@
  * https://trufflesuite.com/docs/truffle/getting-started/using-the-truffle-dashboard/
  */
 
-// require('dotenv').config();
-// const { MNEMONIC, PROJECT_ID } = process.env;
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
+const MNEMONIC = "car wire decade butter slogan rate index armed retreat motor concert enforce";
+const PROJECT_ID = "19535f8b7b8441f9b5cf73928efa8c40";
+
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 module.exports = {
   /**
@@ -82,13 +83,6 @@ module.exports = {
     //
     // Useful for deploying to a public network.
     // Note: It's important to wrap the provider as a function to ensure truffle uses a new provider every time.
-    // goerli: {
-    //   provider: () => new HDWalletProvider(MNEMONIC, `https://goerli.infura.io/v3/${PROJECT_ID}`),
-    //   network_id: 5,       // Goerli's id
-    //   confirmations: 2,    // # of confirmations to wait between deployments. (default: 0)
-    //   timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
-    //   skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
-    // },
     //
     // Useful for private networks
     // private: {
@@ -104,7 +98,14 @@ module.exports = {
         port: 7545,         // Ganache's default
         network_id: "*",
         from: "0xe409d6bBfc0AFa75e29F626C723f5e2773335E04" // It changes the account address to deploy the smart contract
-      }
+      },
+      goerli: {
+        provider: () => new HDWalletProvider(MNEMONIC, `https://goerli.infura.io/v3/${PROJECT_ID}`),
+        network_id: 5,       // Goerli's id
+        confirmations: 2,    // # of confirmations to wait between deployments. (default: 0)
+        timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+        skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+      },
     },
 
   // Set default mocha options here, use special reporters, etc.

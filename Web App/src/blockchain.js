@@ -1,7 +1,7 @@
 import Web3 from 'web3';
 import CorkToken from './contracts/TheWineGame.json';
 
-const contractAddress = "0x53C3e9F98c3d5bA18c6154298B26Da139a9bFC25";
+const contractAddress = "0xcf51a39f48510a62ec99014b6ea5c7f352665e7b";
 
 let web3 = undefined
 let account = undefined

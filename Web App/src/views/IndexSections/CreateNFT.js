@@ -65,7 +65,10 @@ class CreateNFT extends React.Component {
   async uploadPhoto() {
     let formData = new FormData();
     formData.append("upload", this.state.file);
-    await api.post('artwork', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+    await api.post('artwork', formData, { 
+        headers: { 
+          'Content-Type': 'multipart/form-data',
+      }});
   }
 
   clear() {
@@ -79,14 +82,16 @@ class CreateNFT extends React.Component {
     });
   }
 
-  createNFT() {
-    claimCork(
+  async createNFT() {
+    await claimCork(
       this.state.accounts, 
       this.state.title, 
       this.state.wine.barcode,
       this.state.wine.producer, 
       this.state.wine.appellation + " " + this.state.wine.vintage
     );
+    await this.uploadPhoto();
+    this.clear();
   }
 
   paginationPage(pagination) {
@@ -217,7 +222,7 @@ class CreateNFT extends React.Component {
             size="lg"
             type="button"
             className="ml-1"
-            onClick={() => { this.createNFT(); this.clear(); }}
+            onClick={() => { this.createNFT(); }}
           >
             Create NFT
           </Button>
